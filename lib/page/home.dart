@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../api/get_data.dart';
 import '../config/url.dart';
+import '../model/banner.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -38,7 +41,14 @@ class _BannerState extends State<Banner> {
 
   getBannerList() async {
     await request(api["banner"]).then((val) {
-     print(val);
+      BannerModel list = BannerModel.fromJson(jsonDecode(val));
+      print(list.data.slider[0].picUrl);
+      // List slider = (val as Map)["data"]["slider"];
+      // print(slider);
+      // print("============");
+      // Map data = (val as Map).cast();
+      // print(jsonDecode(val) is Map);
+      // print(data);
     });
   }
 }
