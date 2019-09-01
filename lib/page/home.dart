@@ -5,6 +5,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import '../api/get_data.dart';
 import '../config/url.dart';
 import '../model/banner.dart';
+import './search.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,6 +15,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,6 +59,7 @@ class _SearchContainerState extends State<SearchContainer> {
               child: InkWell(
             onTap: () {
               // 跳转到 搜索页面
+              Navigator.of(context).push(MaterialPageRoute(builder:(context)=>new Search()));
             },
             child: Container(
               alignment: Alignment.center,
