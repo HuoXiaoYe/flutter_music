@@ -10,7 +10,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp>{
   List<Widget> widgetArr = [];
   int _activeIndex = 0;
   @override
@@ -18,35 +18,28 @@ class _MyAppState extends State<MyApp> {
     widgetArr..add(Home())..add(Commend())..add(Activity())..add(Person());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widgetArr[_activeIndex],
+      body: IndexedStack(
+        index: _activeIndex,
+        children: widgetArr,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (int val){
+        onTap: (int val) {
           setState(() {
-           _activeIndex = val; 
+            _activeIndex = val;
           });
         },
         currentIndex: _activeIndex,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.library_music),
-            title: Text("音乐馆")
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            title: Text("推荐")
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            title: Text("动态")
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text("我的")
-          )
+              icon: Icon(Icons.library_music), title: Text("音乐馆")),
+          BottomNavigationBarItem(icon: Icon(Icons.star), title: Text("推荐")),
+          BottomNavigationBarItem(icon: Icon(Icons.star), title: Text("动态")),
+          BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("我的"))
         ],
       ),
     );

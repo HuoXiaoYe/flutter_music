@@ -13,12 +13,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+  List bannerList;
   @override
   bool get wantKeepAlive => true;
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    getBannerList();
+    print(bannerList);
+    super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,10 +30,19 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       child: ListView(
         children: <Widget>[
           SearchContainer(), // 顶部搜索框
-          Banner(), // 轮播图
+          Banner(bannerList), // 轮播图
         ],
       ),
     );
+  }
+
+  getBannerList() async {
+    await request(api["banner"]).then((val) {
+      BannerModel list = BannerModel.fromJson(jsonDecode(val));
+      setState(() {
+        bannerList = list.data.slider;
+      });
+    });
   }
 }
 
@@ -59,7 +72,8 @@ class _SearchContainerState extends State<SearchContainer> {
               child: InkWell(
             onTap: () {
               // 跳转到 搜索页面
-              Navigator.of(context).push(MaterialPageRoute(builder:(context)=>new Search()));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => new Search()));
             },
             child: Container(
               alignment: Alignment.center,
@@ -104,6 +118,8 @@ class _SearchContainerState extends State<SearchContainer> {
 
 // 轮播图组件
 class Banner extends StatefulWidget {
+  final List list;
+  Banner(this.list);
   @override
   _BannerState createState() => _BannerState();
 }
@@ -114,6 +130,8 @@ class _BannerState extends State<Banner> {
   void initState() {
     getBannerList(); // 调用获取轮播图数据的方法
     super.initState();
+    print("=============");
+    print(widget.list);
   }
 
   @override
