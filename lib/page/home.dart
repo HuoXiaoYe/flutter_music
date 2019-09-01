@@ -11,7 +11,9 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,44 +39,55 @@ class _SearchContainerState extends State<SearchContainer> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      height:40,
+      height: 40,
       child: Row(
         children: <Widget>[
           Container(
             alignment: Alignment.center,
             width: 80,
-            child: Text("音乐馆",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w500),),
+            child: Text(
+              "音乐馆",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
           ),
           Expanded(
-            child:InkWell(
-              onTap: (){
-                // 跳转到 搜索页面
-              },
-              child: Container(
-                alignment: Alignment.center,
-                height: 30,
-                decoration: BoxDecoration(color: Colors.black12,borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.search,color: Colors.black87),
-                    Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Text("搜索",style: TextStyle(color: Colors.black87),),
-                    )
-                  ],
-                ),
+              child: InkWell(
+            onTap: () {
+              // 跳转到 搜索页面
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: 30,
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.search, color: Colors.black87),
+                  Padding(
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text(
+                      "搜索",
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                  )
+                ],
               ),
-            )
-          ),
+            ),
+          )),
           InkWell(
-            onTap: (){
+            onTap: () {
               // 跳转到 听歌识曲页面
             },
             child: Container(
               alignment: Alignment.center,
               width: 80,
-              child: Icon(Icons.music_note,size: 30,color: Colors.black54,),
+              child: Icon(
+                Icons.music_note,
+                size: 30,
+                color: Colors.black54,
+              ),
             ),
           )
         ],
@@ -92,8 +105,13 @@ class Banner extends StatefulWidget {
 class _BannerState extends State<Banner> {
   List bannerList = [];
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     getBannerList(); // 调用获取轮播图数据的方法
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 200,
       color: Colors.white,
@@ -109,23 +127,10 @@ class _BannerState extends State<Banner> {
                 fit: BoxFit.fitHeight,
               ),
             ),
-            // color: Colors.red,
-            // child: Container(
-            //   height: 190.0,
-            //   decoration: BoxDecoration(
-            //       // borderRadius: BorderRadius.all(Radius.circular(10))
-            //       ),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.all(Radius.circular(10)),
-            //     child: Image.network(
-            //       bannerList[index].picUrl,
-            //       fit: BoxFit.fitHeight,
-            //     ),
-            //   ),
-            // ),
           );
         },
         pagination: new SwiperPagination(),
+        autoplay: true,
       ),
     );
   }
@@ -133,16 +138,9 @@ class _BannerState extends State<Banner> {
   getBannerList() async {
     await request(api["banner"]).then((val) {
       BannerModel list = BannerModel.fromJson(jsonDecode(val));
-      // print(list.data.slider);
       setState(() {
         bannerList = list.data.slider;
       });
-      // List slider = (val as Map)["data"]["slider"];
-      // print(slider);
-      // print("============");
-      // Map data = (val as Map).cast();
-      // print(jsonDecode(val) is Map);
-      // print(data);
     });
   }
 }
