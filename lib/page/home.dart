@@ -17,32 +17,17 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
   @override
-  void initState() {
-    getBannerList();
-    print(bannerList);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: ListView(
         children: <Widget>[
           SearchContainer(), // 顶部搜索框
-          Banner(bannerList), // 轮播图
+          Banner(), // 轮播图
+          NavBar(), // 导航栏
         ],
       ),
     );
-  }
-
-  getBannerList() async {
-    await request(api["banner"]).then((val) {
-      BannerModel list = BannerModel.fromJson(jsonDecode(val));
-      setState(() {
-        bannerList = list.data.slider;
-      });
-    });
   }
 }
 
@@ -118,8 +103,8 @@ class _SearchContainerState extends State<SearchContainer> {
 
 // 轮播图组件
 class Banner extends StatefulWidget {
-  final List list;
-  Banner(this.list);
+  // final List list;
+  // Banner(this.list);
   @override
   _BannerState createState() => _BannerState();
 }
@@ -130,8 +115,6 @@ class _BannerState extends State<Banner> {
   void initState() {
     getBannerList(); // 调用获取轮播图数据的方法
     super.initState();
-    print("=============");
-    print(widget.list);
   }
 
   @override
@@ -166,5 +149,49 @@ class _BannerState extends State<Banner> {
         bannerList = list.data.slider;
       });
     });
+  }
+}
+
+final List navData = [
+  {"icon": Icons.person, "title": "歌手"},
+  {"icon": Icons.person, "title": "排行"},
+  {"icon": Icons.person, "title": "分类歌单"},
+  {"icon": Icons.person, "title": "电台"},
+  {"icon": Icons.person, "title": "一起听"}
+];
+
+// 轮播图下方导航栏区域
+class NavBar extends StatelessWidget {
+  Widget _inkwellItem(item) {
+    print("===============");
+    print(item["title"]);
+    return InkWell(
+      onTap: () {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.person, size: 44, color: Color.fromRGBO(34, 213, 157, 1)),
+          Padding(
+            padding: EdgeInsets.only(top: 0),
+            child: Text(
+              item["title"],
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 80,
+      margin: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: navData.map((item)=>_inkwellItem(item)).toList(),
+      ),
+    );
   }
 }
